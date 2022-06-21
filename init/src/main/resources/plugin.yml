@@ -1,0 +1,13 @@
+name: Copypose
+version: '${project.parent.version}'
+main: smily.copypose.CopyPose
+api-version: 1.18
+description: Record a pose and then paste it to a player.
+depend: [ProtocolLib]
+commands:
+  recordpose:
+    description: Record a pose.
+  editpose:
+    description: Edit the pose.
+  pastepose:
+    description: Paste the pose
