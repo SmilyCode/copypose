@@ -17,6 +17,11 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class PastePoseV1_18_1 implements IPastePose {
 
     @Override
+    public IPastePose clone() {
+        return new PastePoseV1_18_1();
+    }
+
+    @Override
     public void pasteToPlayer(Player target, RecordPose recordPose){
         Map<Integer, PlayerMove> moveData = recordPose.getRecordData().getTimestamp();
         AtomicInteger indexTick = new AtomicInteger(1);
@@ -53,7 +58,6 @@ public class PastePoseV1_18_1 implements IPastePose {
             target.teleport(location);
 
             indexTick.getAndIncrement();
-
         }, 1, recordPose.getRecordData().getDurationData(), 0);
     }
 }

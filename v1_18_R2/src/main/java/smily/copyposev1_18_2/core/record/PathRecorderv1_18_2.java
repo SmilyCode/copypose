@@ -18,6 +18,11 @@ public class PathRecorderv1_18_2 implements IPathRecorder {
     private AnimatedBukkitSchedule animation;
     private Player player;
 
+    @Override
+    public IPathRecorder clone(){
+        return new PathRecorderv1_18_2();
+    }
+
     // throw RuntimeException if already recording
     @Override
     public void record(Player player, int duration) {

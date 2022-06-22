@@ -1,32 +1,31 @@
 package smily.copyposev1_18_2.npc;
 
 import com.mojang.authlib.GameProfile;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.game.ClientboundAddPlayerPacket;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.Pose;
-import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
-import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.entity.ai.goal.GoalSelector;
-import net.minecraft.world.entity.monster.Monster;
+import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
+import smily.copyposev1_18_2.npc.goal.DirectPathGoal;
 
-public class NPCv1_18_2 extends PathfinderMob {
+public class PlayerNPCv1_18_2 extends PathfinderMob {
     private final MinecraftServer server;
     private Player fakePlayer;
     private GameProfile gameProfile;
+    private Goal directPathGoal;
 
-
-    protected NPCv1_18_2(EntityType<? extends PathfinderMob> entitytypes, Level world) {
+    protected PlayerNPCv1_18_2(EntityType<? extends PathfinderMob> entitytypes, Level world) {
         super(entitytypes, world);
         this.maxUpStep = 0.6F;
         this.setCanPickUpLoot(true);
         this.setCustomNameVisible(true);
         this.setCustomName(this.getName());
-        this.setInvulnerable(true);
+        this.setInvulnerable(false);
         this.setPersistenceRequired();
         this.xpReward = 0;
         this.setSpeed(0.4F);
@@ -53,15 +52,6 @@ public class NPCv1_18_2 extends PathfinderMob {
         };
     }
 
-    public static AttributeSupplier.Builder createNPCAttributes() {
-        return Monster.createMonsterAttributes()
-                .add(Attributes.ATTACK_DAMAGE, 3.25D)
-                .add(Attributes.ARMOR, 2.0D)
-                .add(Attributes.MOVEMENT_SPEED, 0.2505D)
-                .add(Attributes.FLYING_SPEED, 0.8D)
-                .add(Attributes.FOLLOW_RANGE, 35.0D);
-    }
-
     @Override
     public SynchedEntityData getEntityData() {
         if (this.fakePlayer == null) {
@@ -83,7 +73,42 @@ public class NPCv1_18_2 extends PathfinderMob {
         super.setPose(pose);
     }
 
+    @Override
+    public boolean canBeLeashed(Player entityhuman) {
+        return false;
+    }
 
+    @Override
+    protected void registerGoals() {
+        this.directPathGoal = new DirectPathGoal(this, this.getSpeed());
 
+        this.goalSelector.addGoal(1, this.directPathGoal);
+    }
 
+    @Override
+    public Packet<?> getAddEntityPacket() {
+        this.fakePlayer.moveTo(this.getX(), this.getY(), this.getZ());
+        this.fakePlayer.setYRot((byte)((int)(this.getYHeadRot() * 256.0F / 360.0F)));
+        this.fakePlayer.setXRot((byte)((int)(this.getXRot() * 256.0F / 360.0F)));
+
+        return new ClientboundAddPlayerPacket(this.fakePlayer);
+    }
+
+    @Override
+    public void setSprinting(boolean flag) {
+        this.fakePlayer.setSprinting(flag);
+        super.setSprinting(flag);
+    }
+
+    @Override
+    public void setJumping(boolean flag) {
+        this.fakePlayer.setSprinting(flag);
+        super.setJumping(flag);
+    }
+
+    @Override
+    public void setSwimming(boolean flag) {
+        this.fakePlayer.setSprinting(flag);
+        super.setSwimming(flag);
+    }
 }

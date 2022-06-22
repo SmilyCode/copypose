@@ -53,4 +53,9 @@ public class PastePoseV1_18_2  implements IPastePose {
 
         }, 1, recordPose.getRecordData().getDurationData(), 0);
     }
+
+    @Override
+    public IPastePose clone() {
+        return new PastePoseV1_18_2();
+    }
 }

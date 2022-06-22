@@ -4,6 +4,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import smily.copypose.data.PlayerMove;
+import smily.copypose.nms.NMSInstances;
 import smily.copypose.util.PluginProperties;
 
 import java.io.File;
@@ -17,6 +18,7 @@ public class RecordPose implements Record {
     private boolean isPlaying = false;
     private int taskId = 0;
     AtomicInteger tick;
+    private IPathRecorder iPathRecorder = NMSInstances.getNewPathRecorder();
 
     private RecordPose(String name, RecordData recordData){
         this.name = name;
@@ -26,7 +28,9 @@ public class RecordPose implements Record {
 
     @Override
     public void record() {
+        if(isPlaying) throw new RuntimeException("Cannot record 2 times");
         Player player = recordData.getPlayer();
+
         tick = new AtomicInteger(1);
 
         isPlaying = true;

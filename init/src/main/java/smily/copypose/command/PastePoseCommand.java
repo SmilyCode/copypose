@@ -21,7 +21,7 @@ public class PastePoseCommand implements CommandExecutor {
     private Player player;
     private PluginMessager messager;
     private RecordPose selectedRecordPose;
-    private final IPastePose pastePose = NMSInstances.getPastePose();
+    private final IPastePose pastePose = NMSInstances.getNewPastePose();
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {

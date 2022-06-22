@@ -4,6 +4,7 @@ import org.bukkit.Server;
 import smily.copyposev1_18_1.core.PastePoseV1_18_1;
 import smily.copyposev1_18_2.core.PastePoseV1_18_2;
 import smily.copypose.util.PluginProperties;
+import smily.copyposev1_18_2.core.record.PathRecorderv1_18_2;
 
 public class NMSInitiate {
     private final Server server;
@@ -26,11 +27,11 @@ public class NMSInitiate {
                 break;
 
             case V1_18_1:
-                new NMSInstances(new PastePoseV1_18_1());
+//                new NMSInstances(new PastePoseV1_18_1());
                 break;
 
             case V1_18_2:
-                new NMSInstances(new PastePoseV1_18_2());
+                new NMSInstances(new PastePoseV1_18_2(), new PathRecorderv1_18_2());
                 break;
         }
     }
